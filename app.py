@@ -1,14 +1,17 @@
 from flask import Flask, request, send_file
-from TTS.api import TTS
-import os
+from gtts import gTTS
+import io
 
 app = Flask(__name__)
-tts = TTS(model_name="tts_models/en/ljspeech/tacotron2-DDC", progress_bar=False, gpu=False)
 
 @app.route('/tts', methods=['POST'])
-def tts_generate():
+def generate():
     data = request.get_json()
     text = data.get("text", "")
-    output_path = "output.wav"
-    tts.tts_to_file(text=text, file_path=output_path)
-    return send_file(output_path, mimetype="audio/wav", as_attachment=True, download_name="voicewave.wav")
+    if not text:
+        return "Text is required", 400
+    tts = gTTS(text)
+    mp3_fp = io.BytesIO()
+    tts.write_to_fp(mp3_fp)
+    mp3_fp.seek(0)
+    return send_file(mp3_fp, mimetype="audio/mpeg", as_attachment=True, download_name="voicewave.mp3")
