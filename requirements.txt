@@ -4,5 +4,4 @@ TTS==0.22.0
 pydub==0.25.1
 torch==2.2.1
 torchaudio==2.2.1
-numpy==1.23.5  # Explicitly specify a compatible version
-librosa==0.10.1
+numpy==1.23.5  
