@@ -1,0 +1,8 @@
+services:
+  - type: web
+    name: tts-app
+    runtime: docker
+    env: python
+    buildCommand: docker build -t tts-app .
+    startCommand: python app.py
+    port: 5000
