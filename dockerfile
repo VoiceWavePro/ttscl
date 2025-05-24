@@ -6,12 +6,15 @@ RUN apt-get update && apt-get install -y \
     libsndfile1 \
     && rm -rf /var/lib/apt/lists/*
 
+# Expose port 5000 explicitly
+EXPOSE 5000
+
 WORKDIR /app
 
-# Upgrade pip and install packages
+# Upgrade pip and install Python packages
 RUN pip install --upgrade pip
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt --use-deprecated=legacy-resolver
+RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
