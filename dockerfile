@@ -1,4 +1,5 @@
-FROM python:3.10-slim s
+FROM python:3.10-slim
+
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
     ffmpeg \
@@ -7,14 +8,16 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /app
 
-# Upgrade pip and use legacy resolver
-RUN pip install --upgrade pip
+# Upgrade pip and install Python dependencies
 COPY requirements.txt .
+RUN pip install --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt --use-deprecated=legacy-resolver
 
+# Copy app code
 COPY . .
 
-# Expose port explicitly
+# Expose Flask port
 EXPOSE 5000
 
+# Start server
 CMD ["python", "app.py"]
