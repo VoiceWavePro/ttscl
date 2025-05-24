@@ -1,7 +1,6 @@
 from flask import Flask, request, send_file, jsonify
 from flask_cors import CORS
-from TTS.api import TTS
-from pydub import AudioSegment
+from gtts import gTTS
 import os
 import io
 import uuid
@@ -9,7 +8,7 @@ import uuid
 app = Flask(__name__)
 CORS(app)
 
-@app.route('/tts', methods=['POST'])
+@app.route("/tts", methods=["POST"])
 def generate():
     data = request.get_json()
     text = data.get("text", "").strip()
@@ -18,17 +17,10 @@ def generate():
         return jsonify({"error": "Text is required"}), 400
 
     try:
-        # Lazy-load the model
-        tts_model = TTS(model_name="tts_models/en/ljspeech/tacotron2-DDC", gpu=False)
-        tmp_wav_path = f"/tmp/{uuid.uuid4()}.wav"
-        tts_model.tts_to_file(text=text, file_path=tmp_wav_path)
-
-        audio = AudioSegment.from_wav(tmp_wav_path)
+        tts = gTTS(text)
         mp3_io = io.BytesIO()
-        audio.export(mp3_io, format="mp3")
+        tts.write_to_fp(mp3_io)
         mp3_io.seek(0)
-        os.remove(tmp_wav_path)
-
         return send_file(mp3_io, mimetype="audio/mpeg", download_name="voicewave.mp3")
     except Exception as e:
         print(f"❌ ERROR: {e}")
@@ -37,5 +29,5 @@ def generate():
 if __name__ == "__main__":
     from waitress import serve
     port = int(os.environ.get("PORT", 5000))
+    print(f"🚀 Serving on port {port}")
     serve(app, host="0.0.0.0", port=port)
-
