@@ -4,4 +4,3 @@ TTS==0.22.0
 pydub==0.25.1
 torch==2.2.1
 torchaudio==2.2.1
-numpy==1.22.0  # Force TTS-compatible version
