@@ -19,7 +19,7 @@ def generate():
 
     try:
         # Lazy-load the model
-        tts_model = TTS(model_name="tts_models/en/ljspeech/fastspeech2", gpu=False)
+        tts_model = TTS(model_name="tts_models/en/ljspeech/glow-tts", gpu=False)
         tmp_wav_path = f"/tmp/{uuid.uuid4()}.wav"
         tts_model.tts_to_file(text=text, file_path=tmp_wav_path)
 
