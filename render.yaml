@@ -6,3 +6,5 @@ services:
     buildCommand: docker build -t tts-app .
     startCommand: python app.py
     port: 5000
+    # Add health check path (optional but recommended)
+    healthCheckPath: /tts
